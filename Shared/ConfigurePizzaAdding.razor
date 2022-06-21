@@ -1,0 +1,118 @@
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+<div>
+    <label>@Adding</label>
+    @if (sauces == null || fruits == null)
+    {
+        <select class="custom-select" disabled>
+            <option>(loading...)</option>
+        </select>
+    }
+    else
+    {
+        <select class="custom-select" @onchange="Selected">
+            <option value="-1" disabled selected>(select)</option>
+            @if (Adding == "sauces") {
+                @for (var i = 0; i < sauces.Count; i++) {
+                    <option value="@i">@sauces[i].Name - (£@(sauces[i].GetFormattedPrice()))</option>
+                }
+            }
+            else {
+                @for (var i = 0; i < fruits.Count; i++) {
+                    <option value="@i">@fruits[i].Name - (£@(fruits[i].GetFormattedPrice()))</option>
+                }
+            }
+            
+        </select>
+    }
+</div>
+
+<div class="toppings">
+    @if (Adding == "sauces") {
+        @foreach (var sauce in Pizza.Sauces)
+        {
+            <div class="topping">
+                @sauce.Sauce.Name
+                <span class="topping-price">@sauce.Sauce.GetFormattedPrice()</span>
+                <button type="button" class="delete-topping" @onclick="@(() => Remove(sauce.Sauce, Adding))">x</button>
+            </div>
+        }
+    }
+    else {
+        @foreach (var fruit in Pizza.Fruits)
+        {
+            <div class="topping">
+                @fruit.Fruit.Name
+                <span class="topping-price">@fruit.Fruit.GetFormattedPrice()</span>
+                <button type="button" class="delete-topping" @onclick="@(() => Remove(fruit.Fruit, Adding))">x</button>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public Pizza Pizza { get; set; }
+    [Parameter] public string Adding { get; set; }
+    [Parameter] public EventCallback<Pizza> PizzaChanged { get; set; }
+    List<Sauce> sauces = new List<Sauce>();
+    List<Fruit> fruits = new List<Fruit>();
+    protected override async Task OnInitializedAsync()
+    {
+        if (Adding == "sauces")
+            sauces = await HttpClient.GetFromJsonAsync<List<Sauce>>(NavigationManager.BaseUri + "sauces");
+        else if (Adding == "fruits")
+            fruits = await HttpClient.GetFromJsonAsync<List<Fruit>>(NavigationManager.BaseUri + "fruits");
+    }
+
+    void Selected(ChangeEventArgs e)
+    {
+        switch (Adding) {
+            case "sauces":
+                if (int.TryParse((string)e.Value, out var index1) && index1 >= 0)
+                    Add(sauces[index1], Adding);
+                break;
+            case "fruits":
+                if (int.TryParse((string)e.Value, out var index2) && index2 >= 0)
+                    Add(fruits[index2], Adding);
+                break;
+        }
+        
+    }
+
+    void Add(Object obj, string Adding)
+    {
+        switch (Adding) {
+            case "sauces":
+                Sauce sauce = (Sauce)obj; 
+                if (Pizza.Sauces.Find(s => s.Sauce == sauce) == null)
+                    Pizza.Sauces.Add(new PizzaSauce() { Sauce = sauce });
+                break;
+            case "fruits":
+                Fruit fruit = (Fruit)obj;
+                if (Pizza.Fruits.Find(f => f.Fruit == fruit) == null)
+                    Pizza.Fruits.Add(new PizzaFruit() { Fruit = fruit });
+                break;
+            default:
+                break;
+        }
+        this.PizzaChanged.InvokeAsync(this.Pizza);
+    }
+
+    void Remove(Object obj, string Adding)
+    {
+        switch (Adding) {
+            case "sauces":
+                Sauce sauce = (Sauce)obj; 
+                Pizza.Sauces.RemoveAll(s => s.Sauce == sauce);
+                break;
+            case "fruits":
+                Fruit fruit = (Fruit)obj;
+                Pizza.Fruits.RemoveAll(s => s.Fruit == fruit);
+                break;
+            default:
+                break;
+        }
+        this.PizzaChanged.InvokeAsync(this.Pizza);
+    }
+}

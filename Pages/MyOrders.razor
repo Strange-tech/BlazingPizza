@@ -1,0 +1,64 @@
+@page "/myorders"
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+<div class="main">
+    @if (ordersWithStatus == null)
+    {
+        <text>Loading...</text>
+    }
+    else if (!ordersWithStatus.Any())
+    {
+        <h2>No orders placed</h2>
+        <a class="btn btn-success" href="">Order some pizza</a>
+    }
+    else
+    {
+        <TabContainer>
+            <div class="track-order">
+                @foreach (var item in ordersWithStatus)
+                {
+                    <TabPage Title=@item.Order.CreatedTime.ToLongDateString()>
+                        <div class="track-order-title">
+                            <h2>Order placed: @item.Order.CreatedTime.ToShortTimeString()</h2>
+                            <p class="ml-auto mb-0">
+                                Items: <strong>@item.Order.Pizzas.Count()</strong>
+                                Total price: <strong>£@item.Order.GetFormattedTotalPrice()</strong>
+                                @if (@item.StatusText != "Delivered")
+                                {
+                                    <a href="myorders/@item.Order.OrderId" class="btn btn-success ml-4">
+                                        Track &gt;
+                                    </a>
+                                }
+                            </p>
+                        </div>
+                        <div class="track-order-body">
+                            <div class="track-order-details">
+                                @foreach (var pizza in item.Order.Pizzas)
+                                {
+                                    <p>
+                                        <strong>
+                                            @(pizza.Size)"
+                                            @pizza.Special.Name
+                                            (£@pizza.GetFormattedTotalPrice())
+                                        </strong>
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </TabPage>
+                }
+            </div>
+        </TabContainer>
+    }
+</div>
+
+@code {
+    List<OrderWithStatus> ordersWithStatus = new List<OrderWithStatus>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        ordersWithStatus = await HttpClient.GetFromJsonAsync<List<OrderWithStatus>>(
+        $"{NavigationManager.BaseUri}orders");
+    }
+}
