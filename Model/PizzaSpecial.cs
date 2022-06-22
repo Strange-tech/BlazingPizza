@@ -15,6 +15,8 @@
 
         public string ImageUrl { get; set; }
 
-        public string GetFormattedBasePrice() => BasePrice.ToString("0.00");
+        public string GetFormattedBasePrice() {
+            return DllHelper.GetFormattedPrice(Decimal.ToDouble(BasePrice));
+        }
     }
 }

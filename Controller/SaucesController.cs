@@ -3,20 +3,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazingPizza;
 
+// 酱汁
 [Route("sauces")]
 [ApiController]
-public class SaucesController : Controller
-{
+public class SaucesController : Controller {
     private readonly PizzaStoreContext _db;
 
-    public SaucesController(PizzaStoreContext db)
-    {
+    public SaucesController(PizzaStoreContext db) {
         _db = db;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Sauce>>> GetPizzas()
-    {
+    public async Task<ActionResult<List<Sauce>>> GetPizzas() {
         return (await _db.Sauces.ToListAsync()).OrderByDescending(s => s.Price).ToList();
     }
 

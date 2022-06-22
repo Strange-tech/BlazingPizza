@@ -9,6 +9,8 @@ namespace BlazingPizza
 
         public decimal Price { get; set; }
 
-        public string GetFormattedPrice() => Price.ToString("0.00");
+        public string GetFormattedPrice() {
+            return DllHelper.GetFormattedPrice(Decimal.ToDouble(Price));
+        }
     }
 }

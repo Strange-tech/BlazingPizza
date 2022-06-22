@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace BlazingPizza
 {
@@ -28,19 +29,23 @@ namespace BlazingPizza
 
         public List<PizzaFruit> Fruits { get; set; }
 
-        public decimal GetBasePrice()
-        {
+        public decimal GetBasePrice() {
             return ((decimal)Size / (decimal)DefaultSize) * Special.BasePrice;
         }
 
-        public decimal GetTotalPrice()
-        {
-            return GetBasePrice() + Sauces.Sum(s => s.Sauce.Price) + Fruits.Sum(f => f.Fruit.Price);
+        public decimal GetTotalPrice() {
+            decimal totalPrice = GetBasePrice();
+            if (Sauces != null) {
+                totalPrice += Sauces.Sum(s => s.Sauce.Price);
+            }
+            if(Fruits != null) {
+                totalPrice += Fruits.Sum(f => f.Fruit.Price);
+            }
+            return totalPrice;
         }
 
-        public string GetFormattedTotalPrice()
-        {
-            return GetTotalPrice().ToString("0.00");
+        public String GetFormattedTotalPrice() {
+            return DllHelper.GetFormattedPrice(Decimal.ToDouble(GetTotalPrice()));
         }
     }
 }
