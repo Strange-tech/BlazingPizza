@@ -1,5 +1,7 @@
 namespace BlazingPizza;
-
+/// <summary>
+/// 数据种子 初始化用
+/// </summary>
 public static class SeedData
 {
     public static void Initialize(PizzaStoreContext db)

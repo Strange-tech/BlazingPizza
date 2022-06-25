@@ -1,7 +1,7 @@
 ﻿namespace BlazingPizza
 {
     /// <summary>
-    /// Represents a pre-configured template for a pizza a user can order
+    /// 披萨模板（底子）
     /// </summary>
     public class PizzaSpecial
     {

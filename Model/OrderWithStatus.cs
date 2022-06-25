@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using CliDll;
 
 namespace BlazingPizza
 {
+    /// <summary>
+    /// 附带状态的订单
+    /// </summary>
     public class OrderWithStatus
     {
         public readonly static TimeSpan PreparationDuration = TimeSpan.FromSeconds(10);
-        public readonly static TimeSpan DeliveryDuration = TimeSpan.FromMinutes(1); // Unrealistic, but more interesting to watch
-
+        public readonly static TimeSpan DeliveryDuration = TimeSpan.FromMinutes(1);
+        public readonly static State OrderCurrentSate = new State();
         public Order Order { get; set; }
 
         public string StatusText { get; set; }
@@ -16,23 +20,9 @@ namespace BlazingPizza
 
         public static OrderWithStatus FromOrder(Order order)
         {
-            // To simulate a real backend process, we fake status updates based on the amount
-            // of time since the order was placed
-            string statusText;
             var dispatchTime = order.CreatedTime.Add(PreparationDuration);
 
-            if (DateTime.Now < dispatchTime)
-            {
-                statusText = "Preparing";
-            }
-            else if (DateTime.Now < dispatchTime + DeliveryDuration)
-            {
-                statusText = "Out for delivery";
-            }
-            else
-            {
-                statusText = "Delivered";
-            }
+            string statusText = OrderCurrentSate.GetState(dispatchTime, DeliveryDuration);
 
             return new OrderWithStatus
             {

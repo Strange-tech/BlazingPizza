@@ -1,5 +1,5 @@
 {
     "appService.preDeployTask": "publish-release",
     "appService.deploySubpath": "bin\\Release\\net6.0\\publish",
-    "appService.defaultWebAppToDeploy": "/subscriptions/e0266f45-381e-4be8-8fbe-825f7aabebfe/microsoft.web/sites/subscriptions/e0266f45-381e-4be8-8fbe-825f7aabebfe/resourceGroups/tongjiblazing/providers/Microsoft.Web/sites/tongjiblazing"
+    "appService.defaultWebAppToDeploy": "None"
 }

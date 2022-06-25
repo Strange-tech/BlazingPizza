@@ -4,8 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace BlazingPizza
 {
+
     /// <summary>
-    /// Represents a customized pizza as part of an order
+    /// 定制后的披萨（信息完整）
     /// </summary>
     public class Pizza
     {

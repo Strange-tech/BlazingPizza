@@ -2,6 +2,9 @@
 
 namespace BlazingPizza
 {
+    /// <summary>
+    /// 目的地地址
+    /// </summary>
     public class Address
     {
         public int Id { get; set; }

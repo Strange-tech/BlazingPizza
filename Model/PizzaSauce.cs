@@ -1,6 +1,8 @@
 namespace BlazingPizza
 {
-    // 披萨-酱汁 关系
+    /// <summary>
+    /// 披萨-酱汁
+    /// </summary>
     public class PizzaSauce
     {
         public Sauce Sauce { get; set; }

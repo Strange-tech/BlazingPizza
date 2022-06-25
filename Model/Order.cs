@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace BlazingPizza
 {
+    /// <summary>
+    /// 订单
+    /// </summary>
     public class Order
     {
         public int OrderId { get; set; }

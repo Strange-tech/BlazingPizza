@@ -1,6 +1,8 @@
 namespace BlazingPizza
 {
-    // 酱汁
+    /// <summary>
+    /// 酱汁
+    /// </summary>
     public class Sauce
     {
         public int Id { get; set; }

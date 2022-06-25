@@ -1,6 +1,8 @@
 namespace BlazingPizza
 {
-    // 水果
+    /// <summary>
+    /// 水果
+    /// </summary>
     public class Fruit
     {
         public int Id { get; set; }
